@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Grid, Card, CardContent, CardMedia, Typography, Button, Container, TextField } from '@mui/material';
 
 const furnitureItems = [
-  { id: 1, name: 'Modern Sofa', price: 50, image: 'https://via.placeholder.com/200', description: 'Stylish sofa for modern living.' },
-  { id: 2, name: 'Wooden Table', price: 30, image: 'https://via.placeholder.com/200', description: 'Durable and elegant wooden table.' },
-  { id: 3, name: 'Office Chair', price: 20, image: 'https://via.placeholder.com/200', description: 'Ergonomic office chair for comfort.' },
-  { id: 4, name: 'King-Size Bed', price: 70, image: 'https://via.placeholder.com/200', description: 'Spacious and cozy king-size bed.' },
-  { id: 5, name: 'Bookshelf', price: 25, image: 'https://via.placeholder.com/200', description: 'Minimalistic bookshelf for storage.' },
+  { id: 1, name: 'Modern Sofa', price: 50, image: 'sofa.jpg', description: 'Stylish sofa for modern living.' },
+  { id: 2, name: 'Wooden Table', price: 30, image: 'Table.webp', description: 'Durable and elegant wooden table.' },
+  { id: 3, name: 'Office Chair', price: 20, image: 'office chair.webp', description: 'Ergonomic office chair for comfort.' },
+  { id: 4, name: 'King-Size Bed', price: 70, image: 'best-king-size-beds.webp', description: 'Spacious and cozy king-size bed.' },
+  { id: 5, name: 'Bookshelf', price: 25, image: 'book self.jpg', description: 'Minimalistic bookshelf for storage.' },
 ];
 
 const Dashboard = ({ addToCart }) => {

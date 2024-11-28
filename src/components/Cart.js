@@ -17,6 +17,7 @@ const Cart = ({ cartItems, removeFromCart, updateRentalPeriod, totalAmount }) =>
   const [editingIndex, setEditingIndex] = useState(null);
   const [newRentalPeriod, setNewRentalPeriod] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
+  const [checkoutItemIndex, setCheckoutItemIndex] = useState(null);
 
   const handleEditChange = (e) => {
     setNewRentalPeriod(Number(e.target.value));
@@ -32,11 +33,21 @@ const Cart = ({ cartItems, removeFromCart, updateRentalPeriod, totalAmount }) =>
     }
   };
 
-  const handleCheckout = () => {
+  const handleItemCheckout = (index) => {
+    setCheckoutItemIndex(index);
     setOpenDialog(true);
   };
 
+  const handleConfirmCheckout = () => {
+    if (checkoutItemIndex !== null) {
+      removeFromCart(checkoutItemIndex);
+      setCheckoutItemIndex(null);
+    }
+    setOpenDialog(false);
+  };
+
   const handleCloseDialog = () => {
+    setCheckoutItemIndex(null);
     setOpenDialog(false);
   };
 
@@ -100,10 +111,18 @@ const Cart = ({ cartItems, removeFromCart, updateRentalPeriod, totalAmount }) =>
                     <Button
                       variant="contained"
                       color="error"
-                      sx={{ marginTop: 2 }}
+                      sx={{ marginTop: 2, marginRight: 2 }}
                       onClick={() => removeFromCart(index)}
                     >
                       Remove
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ marginTop: 2 }}
+                      onClick={() => handleItemCheckout(index)}
+                    >
+                      Checkout Item
                     </Button>
                   </CardContent>
                 </Card>
@@ -113,25 +132,35 @@ const Cart = ({ cartItems, removeFromCart, updateRentalPeriod, totalAmount }) =>
           <Typography variant="h5" sx={{ marginTop: 4, fontWeight: 'bold' }}>
             Total Amount: Rs.{totalAmount}
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ marginTop: 3 }}
-            onClick={handleCheckout}
-          >
-            Checkout
-          </Button>
           <Dialog open={openDialog} onClose={handleCloseDialog}>
             <DialogTitle>Checkout Summary</DialogTitle>
             <DialogContent>
-              <Typography variant="h6">Total Amount: Rs.{totalAmount}</Typography>
-              <Typography variant="body1" sx={{ marginTop: 2 }}>
-                Thank you for your purchase! The bill has been generated and processed.
-              </Typography>
+              {checkoutItemIndex !== null ? (
+                <>
+                  <Typography variant="h6">Item: {cartItems[checkoutItemIndex].name}</Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ marginTop: 2 }}>
+                    Description: {cartItems[checkoutItemIndex].description}
+                  </Typography>
+                  <Typography variant="body1" sx={{ marginTop: 2 }}>
+                    Rental Period: {cartItems[checkoutItemIndex].rentalPeriod} day(s)
+                  </Typography>
+                  <Typography variant="h6" sx={{ marginTop: 2 }}>
+                    Total Cost: Rs.{cartItems[checkoutItemIndex].price * cartItems[checkoutItemIndex].rentalPeriod}
+                  </Typography>
+                  <Typography variant="body2" sx={{ marginTop: 2, fontStyle: 'italic' }}>
+                    Thank you for checking out this item!
+                  </Typography>
+                </>
+              ) : (
+                <Typography variant="body1">No item selected for checkout.</Typography>
+              )}
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                Close
+              <Button onClick={handleConfirmCheckout} color="primary">
+                Confirm
+              </Button>
+              <Button onClick={handleCloseDialog} color="secondary">
+                Cancel
               </Button>
             </DialogActions>
           </Dialog>
