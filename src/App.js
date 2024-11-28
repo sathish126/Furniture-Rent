@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Dashboard from './components/Dashboard';
+import Home from './components/Home';
+import Dashboard from './components/Dashboard'; // This remains a separate file
 import Cart from './components/Cart';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
@@ -39,7 +40,10 @@ const App = () => {
     <Router>
       <Header cartCount={cart.length} />
       <Routes>
-        <Route path="/" element={<Dashboard addToCart={addToCart} />} />
+        <Route path="/" element={<Home />} /> {/* Default route points to Home */}
+        <Route path="/dashboard" element={
+          <Dashboard addToCart={addToCart} />
+        } />
         <Route path="/cart" element={
           <Cart
             cartItems={cart}

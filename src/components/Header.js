@@ -1,15 +1,20 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Badge, Container, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Container, Box, Button } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Badge from '@mui/material/Badge';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ cartCount }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Determine if we are on the cart or dashboard page
-  const isCartPage = location.pathname === '/cart';
-  const isDashboardPage = location.pathname === '/';
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setIsDrawerOpen(open);
+  };
 
   return (
     <AppBar 
@@ -18,48 +23,75 @@ const Header = ({ cartCount }) => {
     >
       <Container maxWidth="lg">
         <Toolbar>
-          <Typography 
-            variant="h5" 
+          {/* Company Name */}
+          <Typography
+            variant="h5"
             sx={{ flexGrow: 1, fontWeight: 'bold', cursor: 'pointer' }}
-            onClick={() => navigate('/')} // Clicking on title navigates to the Dashboard
+            onClick={() => navigate('/')}
           >
             Furniture Rental
           </Typography>
 
-          {/* Show the "Back to Dashboard" button only on the Cart page */}
-          {isCartPage && (
-            <Button
-              color="inherit"
-              onClick={() => navigate('/')}
-              sx={{ marginRight: 2 }}
-            >
-              Back to Dashboard
-            </Button>
-          )}
+          {/* Mobile Menu Icon */}
+          <IconButton
+            edge="start"
+            color="inherit"
+            sx={{ display: { xs: 'block', sm: 'none' } }}
+            onClick={toggleDrawer(true)}
+          >
+            <MenuIcon />
+          </IconButton>
 
-          {/* Show the cart icon only on the Dashboard page */}
-          {isDashboardPage && (
+          {/* Drawer for Mobile Sidebar */}
+          <Drawer
+            anchor="left"
+            open={isDrawerOpen}
+            onClose={toggleDrawer(false)}
+          >
+            <Box
+              sx={{ width: 250 }}
+              role="presentation"
+              onClick={toggleDrawer(false)}
+              onKeyDown={toggleDrawer(false)}
+            >
+              <List>
+                {/* Navigation Links */}
+                <ListItem button onClick={() => navigate('/')}>
+                  <ListItemText primary="Home" />
+                </ListItem>
+                <ListItem button onClick={() => navigate('/dashboard')}>
+                  <ListItemText primary="Dashboard" />
+                </ListItem>
+                <ListItem button onClick={() => navigate('/cart')}>
+                  <ListItemText primary="Cart" />
+                </ListItem>
+                <ListItem button onClick={() => navigate('/signin')}>
+                  <ListItemText primary="Sign In" />
+                </ListItem>
+                <ListItem button onClick={() => navigate('/signup')}>
+                  <ListItemText primary="Sign Up" />
+                </ListItem>
+              </List>
+            </Box>
+          </Drawer>
+
+          {/* Desktop Navigation */}
+          <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
+            <Button color="inherit" onClick={() => navigate('/')}>
+              Home
+            </Button>
+            <Button color="inherit" onClick={() => navigate('/dashboard')}>
+              Dashboard
+            </Button>
             <IconButton color="inherit" component={Link} to="/cart">
               <Badge badgeContent={cartCount} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
-          )}
-
-          {/* Sign In and Sign Up buttons */}
-          <Box sx={{ marginLeft: 2 }}>
-            <Button
-              color="inherit"
-              sx={{ marginRight: 1 }}
-              onClick={() => navigate('/signin')}
-            >
+            <Button color="inherit" onClick={() => navigate('/signin')}>
               Sign In
             </Button>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => navigate('/signup')}
-            >
+            <Button variant="outlined" color="inherit" onClick={() => navigate('/signup')}>
               Sign Up
             </Button>
           </Box>
